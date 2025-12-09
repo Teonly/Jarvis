@@ -1,129 +1,140 @@
-# Arquitetura do Sistema — JarvisLite
-
-A arquitetura do **JarvisLite** foi planejada para ser modular, expansível e simples de manter. Cada parte do sistema é separada em responsabilidades claras, permitindo que novas funções sejam adicionadas sem alterar o núcleo principal.
-
----
+# Arquitetura do Jarvis
 
 ## Visão Geral
 
-O sistema é dividido em quatro grandes componentes:
+A arquitetura do Jarvis Lite é projetada para ser modular, expansível e flexível. Cada parte do sistema funciona como um bloco independente, permitindo que novas funcionalidades sejam adicionadas sem comprometer o restante da aplicação.
 
-1. **Núcleo (Core)** — Coordena tudo.
-2. **Módulos** — Funções independentes adicionadas como plugins.
-3. **IA (mente do sistema)** — Ainda não definida, mas responsável por interpretação e auxílio.
-4. **Interface** — Voz, texto e possíveis UIs futuras.
+Este documento descreve todos os módulos planejados, o fluxo de dados e como as camadas internas interagem.
 
 ---
 
-## 1. Núcleo (Core)
+## Componentes Principais
 
-O núcleo é o responsável por:
+### 1. **Input Layer (Entrada)**
 
-* Carregar e gerenciar todos os módulos.
-* Receber comandos (voz, texto ou eventos).
-* Interpretar e encaminhar esses comandos para o módulo correto.
-* Manter logs, permissões e comunicações internas.
+Responsável por capturar qualquer forma de entrada do usuário:
 
-### Funções esperadas
+* Comandos de voz
+* Texto digitado
+* Atalhos
 
-* Inicialização dos módulos.
-* Monitoramento de erros.
-* Roteamento de comandos.
-* Controle da IA.
+Submódulos:
 
----
-
-## 2. Módulos do Sistema
-
-Cada módulo é independente e deve seguir uma estrutura clara.
-
-### Estrutura sugerida de um módulo
-
-```
-/modules
-  ├── nome_do_modulo/
-  │     ├── __init__.py
-  │     ├── main.py
-  │     ├── config.json
-  │     └── README.md
-```
-
-### Tipos de módulos
-
-* **Automação** — abrir programas, manipular arquivos, organizar pastas.
-* **Informação** — clima, pesquisas, utilidades.
-* **Produtividade** — lembretes, timers, tarefas.
-* **IA/Análise** — comandos complexos, interpretação.
-
-Cada módulo comunica-se apenas com o núcleo, nunca diretamente com outros módulos.
+* Speech-to-Text (opcional)
+* Parser inicial de texto
 
 ---
 
-## 3. Mecanismo de IA
+### 2. **NLU Layer (Interpretação de Intenção)**
 
-A IA usada no JarvisLite ainda não foi escolhida. As opções incluem:
+Camada que interpreta o comando do usuário e identifica intenção e parâmetros.
 
-* Modelo local (ex.: LLaMA, Gemma, Phi).
-* API externa (ex.: GPT-5 Mini).
-* Solução híbrida.
+Funções:
 
-### Funções da IA
+* Detectar intenção (abrir programa, pesquisar, executar script)
+* Extrair entidades (nome do programa, termo de busca, etc.)
+* Normalizar texto
 
-* Interpretar comandos complexos.
-* Auxiliar na escolha do módulo certo.
-* Responder perguntas gerais.
-* Ajudar a depurar erros e sugerir ações.
-
-A IA será acessada através de uma camada intermediária, nunca diretamente pelos módulos.
+Pode futuramente usar modelos maiores ou motores alternativos.
 
 ---
 
-## 4. Reconhecimento de Voz
+### 3. **AI Engine (Planejado)**
 
-Também está em definição, mas os candidatos incluem:
+Motor responsável por:
 
-* Whisper (OpenAI)
-* Vosk
-* SpeechRecognition API
+* Analisar a intenção
+* Gerar respostas
+* Conversar de forma natural
+* Ajudar na tomada de decisões
 
-### Funções esperadas
-
-* Converter áudio para texto.
-* Enviar o texto para o Núcleo.
-* Reagir a ativadores (wake words).
+O plano inicial é usar **ChatGPT 5 Mini**, mas ainda existem considerações e alternativas que serão avaliadas futuramente.
 
 ---
 
-## 5. Interface do Usuário
+### 4. **Action Manager (Gerenciador de Ações)**
 
-O JarvisLite começa com interface textual e comandos de voz, mas poderá evoluir para:
+Recebe a intenção já interpretada e executa a ação correta.
 
-* Painel web.
-* Aplicativo desktop.
-* Aplicativo mobile.
+Responsável por:
 
----
+* Abrir softwares
+* Criar arquivos
+* Enviar notificações
+* Executar scripts
+* Controlar automações
 
-## 6. Fluxo Básico
+Possui ponte com:
 
-1. Usuário fala ou digita um comando.
-2. Reconhecimento de voz converte (se necessário).
-3. Núcleo recebe o comando.
-4. IA interpreta (se for um comando complexo).
-5. Núcleo encaminha para o módulo correto.
-6. Módulo executa a ação.
-7. Núcleo retorna a resposta.
+* Sistema operacional
+* API internas
+* Scripts locais
 
 ---
 
-## 7. Filosofia da Arquitetura
+### 5. **Modules Layer (Módulos Funcionais)**
 
-* **Modularidade máxima.**
-* **Independência entre módulos.**
-* **Facilidade de adicionar novas funções.**
-* **Flexibilidade na escolha da IA.**
-* **Código limpo e documentado.**
+Cada funcionalidade do Jarvis é tratada como um módulo independente.
+Exemplos:
+
+* Módulo de Automação do PC
+* Módulo de Pesquisa Rápida
+* Módulo de Organização de Projetos
+* Módulo de Scripts
+* Módulo de Contexto
+
+Cada módulo responde a ações específicas.
 
 ---
 
-Este documento será expandido conforme o desenvolvimento avançar.
+### 6. **Data & Storage Layer**
+
+Camada responsável por guardar:
+
+* Configurações do usuário
+* Histórico de comandos
+* Preferências
+* Logs
+
+Formato planejado:
+
+* JSON local
+* SQLite (possível no futuro)
+
+---
+
+### 7. **Output Layer (Saída)**
+
+Camada que devolve a resposta ao usuário.
+
+
+Principalmente pela síntese de voz, assim como no filme, só será  mostrado texto ou imagem (se nescessario) para complementar o áudio.
+
+---
+
+## Fluxo Geral do Sistema
+
+1. Usuário envia um comando (voz ou texto)
+2. Input Layer captura o comando
+3. NLU interpreta intenção
+4. AI Engine analisa e complementa o comando (se necessário)
+5. Action Manager escolhe o módulo ideal
+6. O módulo executa a ação
+7. Output Layer retorna o resultado
+
+---
+
+## Escalabilidade
+
+A arquitetura permite:
+
+* Adicionar novos módulos sem quebrar o sistema
+* Trocar o motor de IA futuramente
+* Integrar com APIs de terceiros
+* Migrar para interface gráfica
+
+---
+
+## Estado Atual
+
+A arquitetura está definida em nível conceitual. Implementações finais serão ajustadas conforme as decisões sobre o motor de IA e a estrutura final de módulos.
